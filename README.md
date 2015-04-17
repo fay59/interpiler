@@ -40,6 +40,14 @@ instructions that the function would normally execute.
 	  -oh=<header.h>    - Output header file name (defaults to <filename>.h)
 	  -oi=<impl.cpp>    - Output implementation file name (defaults to <filename>.cpp)
 
+### License
+
+Interpiler itself is licensed under the terms of the GPL v3 license.
+
+**As a special exception to the GPL license**, you may create a larger work that
+contains part or all of the Interpiler code generator skeleton and distribute
+that work under the terms of your choice.
+
 ## Building
 
 Interpiler links against LLVM and as such needs a host of its libraries. The
