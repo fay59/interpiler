@@ -6,13 +6,14 @@
 //  Copyright (c) 2015 Félix Cloutier. All rights reserved.
 //
 
+// build with:
+// clang++ --std=gnu++14 -stdlib=libc++ -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -DMAYBE_NORETURN='[[gnu::noreturn]]' -O3 -S -emit-llvm -o brainfuck.S execute_one.cpp
+
 #include <cstdio>
 
 #include "exec.h"
 
 using namespace brainfuck;
-
-#define BF_OPCODE(op) extern "C" void op ([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept
 
 namespace
 {
@@ -66,22 +67,5 @@ BF_OPCODE(loop_exit)
 	if (state->memory[state->index] != 0)
 	{
 		go_to(state, statement.data);
-	}
-}
-
-extern "C" void brainfuck::execute_one([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept
-{
-#define OP_CASE(n)	case opcode::n: n(state, statement); break
-	switch (statement.opcode)
-	{
-		OP_CASE(dec_ptr);
-		OP_CASE(dec_value);
-		OP_CASE(inc_ptr);
-		OP_CASE(inc_value);
-		OP_CASE(input);
-		OP_CASE(output);
-		OP_CASE(loop_enter);
-		OP_CASE(loop_exit);
-		default: break;
 	}
 }

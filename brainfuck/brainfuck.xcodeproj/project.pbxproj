@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC57B47C1AE02625008CC128 /* irgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC57B47A1AE02625008CC128 /* irgen.cpp */; };
+		DC57B4831AE0264D008CC128 /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B47D1AE0264D008CC128 /* libncurses.dylib */; };
+		DC57B4841AE0264D008CC128 /* libLLVMIRReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B47E1AE0264D008CC128 /* libLLVMIRReader.a */; };
+		DC57B4851AE0264D008CC128 /* libLLVMCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B47F1AE0264D008CC128 /* libLLVMCore.a */; };
+		DC57B4861AE0264D008CC128 /* libLLVMSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B4801AE0264D008CC128 /* libLLVMSupport.a */; };
+		DC57B4871AE0264D008CC128 /* libLLVMBitReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B4811AE0264D008CC128 /* libLLVMBitReader.a */; };
+		DC57B4881AE0264D008CC128 /* libLLVMAsmParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC57B4821AE0264D008CC128 /* libLLVMAsmParser.a */; };
+		DC57B48C1AE032D3008CC128 /* compile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC57B48A1AE032D3008CC128 /* compile.cpp */; };
 		DC7261DA1ADDAC18007E88CD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7261D91ADDAC18007E88CD /* main.cpp */; };
 		DC7261E51ADDAC85007E88CD /* parse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7261E31ADDAC85007E88CD /* parse.cpp */; };
 		DC7261E81ADDB674007E88CD /* print.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7261E61ADDB674007E88CD /* print.cpp */; };
@@ -27,6 +35,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DC57B47A1AE02625008CC128 /* irgen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irgen.cpp; sourceTree = "<group>"; };
+		DC57B47B1AE02625008CC128 /* irgen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irgen.h; sourceTree = "<group>"; };
+		DC57B47D1AE0264D008CC128 /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = usr/lib/libncurses.dylib; sourceTree = SDKROOT; };
+		DC57B47E1AE0264D008CC128 /* libLLVMIRReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMIRReader.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMIRReader.a"; sourceTree = "<group>"; };
+		DC57B47F1AE0264D008CC128 /* libLLVMCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMCore.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMCore.a"; sourceTree = "<group>"; };
+		DC57B4801AE0264D008CC128 /* libLLVMSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSupport.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMSupport.a"; sourceTree = "<group>"; };
+		DC57B4811AE0264D008CC128 /* libLLVMBitReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBitReader.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMBitReader.a"; sourceTree = "<group>"; };
+		DC57B4821AE0264D008CC128 /* libLLVMAsmParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAsmParser.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMAsmParser.a"; sourceTree = "<group>"; };
+		DC57B48A1AE032D3008CC128 /* compile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compile.cpp; sourceTree = "<group>"; };
+		DC57B48B1AE032D3008CC128 /* compile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compile.h; sourceTree = "<group>"; };
 		DC7261D61ADDAC18007E88CD /* brainfuck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = brainfuck; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7261D91ADDAC18007E88CD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DC7261E31ADDAC85007E88CD /* parse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parse.cpp; sourceTree = "<group>"; };
@@ -46,12 +64,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC57B4831AE0264D008CC128 /* libncurses.dylib in Frameworks */,
+				DC57B4841AE0264D008CC128 /* libLLVMIRReader.a in Frameworks */,
+				DC57B4851AE0264D008CC128 /* libLLVMCore.a in Frameworks */,
+				DC57B4861AE0264D008CC128 /* libLLVMSupport.a in Frameworks */,
+				DC57B4871AE0264D008CC128 /* libLLVMBitReader.a in Frameworks */,
+				DC57B4881AE0264D008CC128 /* libLLVMAsmParser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC57B4891AE02657008CC128 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				DC57B47D1AE0264D008CC128 /* libncurses.dylib */,
+				DC57B47E1AE0264D008CC128 /* libLLVMIRReader.a */,
+				DC57B47F1AE0264D008CC128 /* libLLVMCore.a */,
+				DC57B4801AE0264D008CC128 /* libLLVMSupport.a */,
+				DC57B4811AE0264D008CC128 /* libLLVMBitReader.a */,
+				DC57B4821AE0264D008CC128 /* libLLVMAsmParser.a */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		DC7261CD1ADDAC18007E88CD = {
 			isa = PBXGroup;
 			children = (
@@ -59,6 +96,7 @@
 				DC7261F11ADEE684007E88CD /* 99bottles.bf */,
 				DC7261F21ADEE827007E88CD /* mandelbrot.bf */,
 				DC7261D81ADDAC18007E88CD /* brainfuck */,
+				DC57B4891AE02657008CC128 /* Libraries */,
 				DC7261D71ADDAC18007E88CD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,6 +112,10 @@
 		DC7261D81ADDAC18007E88CD /* brainfuck */ = {
 			isa = PBXGroup;
 			children = (
+				DC57B48A1AE032D3008CC128 /* compile.cpp */,
+				DC57B48B1AE032D3008CC128 /* compile.h */,
+				DC57B47A1AE02625008CC128 /* irgen.cpp */,
+				DC57B47B1AE02625008CC128 /* irgen.h */,
 				DC7261ED1ADEB3B1007E88CD /* execute_one.cpp */,
 				DC7261EA1ADEAE11007E88CD /* exec.cpp */,
 				DC7261EB1ADEAE11007E88CD /* exec.h */,
@@ -144,6 +186,8 @@
 			files = (
 				DC7261DA1ADDAC18007E88CD /* main.cpp in Sources */,
 				DC7261E51ADDAC85007E88CD /* parse.cpp in Sources */,
+				DC57B47C1AE02625008CC128 /* irgen.cpp in Sources */,
+				DC57B48C1AE032D3008CC128 /* compile.cpp in Sources */,
 				DC7261EE1ADEB3B1007E88CD /* execute_one.cpp in Sources */,
 				DC7261EC1ADEAE11007E88CD /* exec.cpp in Sources */,
 				DC7261E81ADDB674007E88CD /* print.cpp in Sources */,
@@ -234,6 +278,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					__STDC_CONSTANT_MACROS,
+					__STDC_LIMIT_MACROS,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/felix/Projets/OpenSource/lldb/llvm/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/felix/Projets/OpenSource/lldb/llvm/Release+Asserts/lib",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-v",
@@ -246,6 +304,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__STDC_LIMIT_MACROS,
+					__STDC_CONSTANT_MACROS,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/felix/Projets/OpenSource/lldb/llvm/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/felix/Projets/OpenSource/lldb/llvm/Release+Asserts/lib",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-v",

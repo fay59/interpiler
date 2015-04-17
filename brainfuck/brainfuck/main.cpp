@@ -14,6 +14,7 @@
 
 #include <unistd.h>
 
+#include "compile.h"
 #include "exec.h"
 #include "parse.h"
 #include "print.h"
@@ -59,7 +60,7 @@ namespace
 		{
 			options result;
 			
-			const char* optionString = "cep";
+			const char* optionString = "c:ep";
 			int c = getopt(argc, const_cast<char**>(argv), optionString);
 			while (c != -1)
 			{
@@ -67,7 +68,10 @@ namespace
 				{
 					case 'e': result.mode = mode::execute; break;
 					case 'p': result.mode = mode::print; break;
-					case 'c': result.mode = mode::compile; break;
+					case 'c':
+						result.mode = mode::compile;
+						result.out_file = optarg;
+						break;
 						
 					case '?':
 						if (optopt != 'h')
@@ -125,12 +129,6 @@ namespace
 		brainfuck::execute(sequence, brainfuck::execute_one);
 		return 0;
 	}
-	
-	int compile_program(brainfuck::scope& program)
-	{
-		cerr << program_name << ": not implemented" << endl;
-		return 3;
-	}
 }
 
 int main(int argc, const char * argv[])
@@ -149,7 +147,7 @@ int main(int argc, const char * argv[])
 			{
 				switch (opts->mode)
 				{
-					case mode::compile: return compile_program(*program);
+					case mode::compile: return compile_program(*program, opts->out_file);
 					case mode::execute: return execute_program(*program);
 					case mode::print: return print_program(*program);
 					default: break;

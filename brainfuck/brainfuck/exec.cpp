@@ -55,6 +55,23 @@ namespace brainfuck
 	{
 		execute(statements, execute_one);
 	}
+	
+	void execute_one([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept
+	{
+#define OP_CASE(n)	case opcode::n: n(state, statement); break
+		switch (statement.opcode)
+		{
+			OP_CASE(dec_ptr);
+			OP_CASE(dec_value);
+			OP_CASE(inc_ptr);
+			OP_CASE(inc_value);
+			OP_CASE(input);
+			OP_CASE(output);
+			OP_CASE(loop_enter);
+			OP_CASE(loop_exit);
+			default: break;
+		}
+	}
 }
 
 extern "C" void go_to([[gnu::nonnull]] brainfuck::state* __restrict__ state, unsigned dest) noexcept

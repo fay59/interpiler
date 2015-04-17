@@ -6,14 +6,18 @@
 //  Copyright (c) 2015 Félix Cloutier. All rights reserved.
 //
 
-#ifndef __brainfuck__compile__
-#define __brainfuck__compile__
+#ifndef __brainfuck__exec__
+#define __brainfuck__exec__
 
 #include <cstdint>
 #include <cstddef>
 #include <vector>
 
 #include "parse.h"
+
+#ifndef MAYBE_NORETURN
+#define MAYBE_NORETURN
+#endif
 
 namespace brainfuck
 {
@@ -48,8 +52,18 @@ namespace brainfuck
 		std::vector<executable_statement> code();
 	};
 	
-	extern "C" void execute_one([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept;
-	extern "C" void go_to([[gnu::nonnull]] state* __restrict__ state, unsigned dest) noexcept;
+	void execute_one([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept;
+	MAYBE_NORETURN extern "C" void go_to([[gnu::nonnull]] state* __restrict__ state, unsigned dest) noexcept;
+	
+#define BF_OPCODE(op) extern "C" void op ([[gnu::nonnull]] state* __restrict__ state, executable_statement statement) noexcept
+	BF_OPCODE(dec_ptr);
+	BF_OPCODE(dec_value);
+	BF_OPCODE(inc_ptr);
+	BF_OPCODE(inc_value);
+	BF_OPCODE(input);
+	BF_OPCODE(loop_enter);
+	BF_OPCODE(loop_exit);
+	BF_OPCODE(output);
 	
 	template<typename TExec>
 	void execute(const std::vector<executable_statement>& code, TExec&& exec)

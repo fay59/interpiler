@@ -296,7 +296,8 @@ namespace
 			ensure_exists(pointer, prefix);
 			
 			string varName = prefix + "var";
-			declare(varName) << "builder.CreateLoad(" << name_of(pointer) << ", " << i.isVolatile() << ");";
+			declare("llvm::LoadInst*", varName) << "builder.CreateLoad(" << name_of(pointer) << ", " << i.isVolatile() << ");";
+			nl() << varName << "->setAlignment(" << i.getAlignment() << ");";
 			set_name(i, varName);
 		}
 		
@@ -310,7 +311,8 @@ namespace
 			ensure_exists(value, prefix);
 			
 			string varName = prefix + "var";
-			declare(varName) << "builder.CreateStore(" << name_of(value) << ", " << name_of(pointer) << ", " << i.isVolatile() << ");";
+			declare("llvm::StoreInst*", varName) << "builder.CreateStore(" << name_of(value) << ", " << name_of(pointer) << ", " << i.isVolatile() << ");";
+			nl() << varName << "->setAlignment(" << i.getAlignment() << ");";
 			set_name(i, varName);
 		}
 		
