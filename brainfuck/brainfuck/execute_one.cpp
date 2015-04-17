@@ -1,12 +1,23 @@
-//
-//  execute_one.cpp
-//  brainfuck
-//
-//  Created by Félix on 2015-04-15.
-//  Copyright (c) 2015 Félix Cloutier. All rights reserved.
-//
+// 
+// Interpiler - turn an interpreter into a compiler
+// Brainfuck example
+// Copyright (C) 2015  Félix Cloutier
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
 
-// build with:
+// build module with:
 // clang++ --std=gnu++14 -stdlib=libc++ -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -DMAYBE_NORETURN='[[gnu::noreturn]]' -O3 -S -emit-llvm -o brainfuck.S execute_one.cpp
 
 #include <cstdio>
