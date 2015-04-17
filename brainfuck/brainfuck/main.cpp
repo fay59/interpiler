@@ -30,6 +30,7 @@ namespace
 		print,
 		execute,
 		compile,
+		dump_ir,
 	};
 
 	class options
@@ -39,12 +40,10 @@ namespace
 		options()
 		{
 			mode = mode::execute;
-			input = &cin;
 		}
 		
 	public:
 		mode mode;
-		istream* input;
 		string out_file;
 		
 		options(const options&) = delete;
@@ -53,14 +52,13 @@ namespace
 		: maybe_in_file(move(that.maybe_in_file)), out_file(move(that.out_file))
 		{
 			mode = that.mode;
-			input = that.input == &that.maybe_in_file ? &maybe_in_file : input;
 		}
 		
 		static unique_ptr<options> parse(int argc, const char** argv)
 		{
 			options result;
 			
-			const char* optionString = "c:ep";
+			const char* optionString = "c:epS";
 			int c = getopt(argc, const_cast<char**>(argv), optionString);
 			while (c != -1)
 			{
@@ -68,6 +66,8 @@ namespace
 				{
 					case 'e': result.mode = mode::execute; break;
 					case 'p': result.mode = mode::print; break;
+					case 'S': result.mode = mode::dump_ir; break;
+						
 					case 'c':
 						result.mode = mode::compile;
 						result.out_file = optarg;
@@ -106,10 +106,14 @@ namespace
 					cerr << program_name << ": can't open " << argv[i] << endl;
 					return nullptr;
 				}
-				
-				result.input = &result.maybe_in_file;
 			}
+			
 			return make_unique<options>(move(result));
+		}
+		
+		istream& input()
+		{
+			return maybe_in_file.is_open() ? maybe_in_file : cin;
 		}
 	};
 	
@@ -138,7 +142,7 @@ int main(int argc, const char * argv[])
 	
 	if (auto opts = options::parse(argc, argv))
 	{
-		istream_iterator<char> program_begin(*opts->input);
+		istream_iterator<char> program_begin(opts->input());
 		istream_iterator<char> program_end;
 		
 		if (auto program = brainfuck::scope::parse(program_begin, program_end))
@@ -148,6 +152,7 @@ int main(int argc, const char * argv[])
 				switch (opts->mode)
 				{
 					case mode::compile: return compile_program(*program, opts->out_file);
+					case mode::dump_ir: return dump_ir(*program);
 					case mode::execute: return execute_program(*program);
 					case mode::print: return print_program(*program);
 					default: break;
@@ -166,10 +171,12 @@ int main(int argc, const char * argv[])
 		}
 	}
 	
-	cerr << "usage: " << program_name << " [-c | -e | -p] [input-file]" << endl;
-	cerr << "       " << program_name << "-c: compile source" << endl;
-	cerr << "       " << program_name << "-e: execute source" << endl;
-	cerr << "       " << program_name << "-p: print source back (removing no-ops)" << endl;
+	cerr << "usage: " << program_name << " [-c output_file | -e | -p | -S] [input-file]" << endl;
+	cerr << "       " << program_name << " -c <outout file>: compile source to binary" << endl;
+	cerr << "       " << program_name << " -S: dump LLVM IR to stdout" << endl;
+	cerr << "       " << program_name << " -e: execute source" << endl;
+	cerr << "       " << program_name << " -p: print source back (removing no-ops)" << endl;
+	cerr << "The last specified mode takes precedence." << endl;
 	cerr << "Execution is the default mode." << endl;
 	cerr << "Stdin is used if no input file is specified." << endl;
 	return 1;

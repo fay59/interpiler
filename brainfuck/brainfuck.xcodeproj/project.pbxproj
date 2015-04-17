@@ -92,12 +92,10 @@
 		DC7261CD1ADDAC18007E88CD = {
 			isa = PBXGroup;
 			children = (
-				DC7261F01ADEE42C007E88CD /* hello.bf */,
-				DC7261F11ADEE684007E88CD /* 99bottles.bf */,
-				DC7261F21ADEE827007E88CD /* mandelbrot.bf */,
 				DC7261D81ADDAC18007E88CD /* brainfuck */,
 				DC57B4891AE02657008CC128 /* Libraries */,
 				DC7261D71ADDAC18007E88CD /* Products */,
+				DC89A4B31AE0B1CF00E453EA /* Samples */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,6 +124,16 @@
 				DC7261E71ADDB674007E88CD /* print.h */,
 			);
 			path = brainfuck;
+			sourceTree = "<group>";
+		};
+		DC89A4B31AE0B1CF00E453EA /* Samples */ = {
+			isa = PBXGroup;
+			children = (
+				DC7261F01ADEE42C007E88CD /* hello.bf */,
+				DC7261F11ADEE684007E88CD /* 99bottles.bf */,
+				DC7261F21ADEE827007E88CD /* mandelbrot.bf */,
+			);
+			path = Samples;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

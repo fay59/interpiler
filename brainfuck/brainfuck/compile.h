@@ -13,5 +13,6 @@
 #include <string>
 
 int compile_program(brainfuck::scope& program, const std::string& out_file);
+int dump_ir(brainfuck::scope& program);
 
 #endif /* defined(__brainfuck__compile__) */
