@@ -67,7 +67,7 @@ namespace
 		
 		raw_string_ostream ss(into.nl());
 		size_t index = types.accumulate(constant->getType());
-		ss << "Constant* " << valueName << " = Constant" << typeName << "::get(types[" << index << "], " << arrayName << ");";
+		ss << "Constant* " << valueName << " = Constant" << typeName << "::get(cast<" << typeName << "Type>(types[" << index << "]), " << arrayName << ");";
 		
 		return valueName;
 	}
