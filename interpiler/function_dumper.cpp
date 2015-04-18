@@ -553,7 +553,7 @@ namespace
 			arrayLine << "};";
 			
 			string name = prefix + "var";
-			declare(name) << "builder.CreateExtractValue(" << name << ", " << prefix << "array);";
+			declare(name) << "builder.CreateExtractValue(" << name_of(v) << ", " << prefix << "array);";
 			set_name(i, name);
 		}
 		
