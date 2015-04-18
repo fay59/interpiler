@@ -531,7 +531,7 @@ namespace
 			string prefix = make_prefix("phi");
 			size_t type = types.accumulate(i.getType());
 			string name = prefix + "var";
-			declare(name) << "builder.CreatePHI(types[" << type << "], " << i.getNumIncomingValues() << ");";
+			declare("PHINode*", name) << "builder.CreatePHI(types[" << type << "], " << i.getNumIncomingValues() << ");";
 			set_name(i, name);
 			
 			// defer setting values to ret time
