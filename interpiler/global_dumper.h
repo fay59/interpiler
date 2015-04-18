@@ -37,6 +37,7 @@ class global_dumper
 	std::unordered_map<llvm::GlobalObject*, size_t> var_indices;
 	
 	std::unique_ptr<llvm::raw_ostream> ostream;
+	llvm::raw_ostream& nl();
 	llvm::raw_ostream& on_index(size_t index);
 	llvm::raw_ostream& insert(llvm::GlobalObject* var);
 	void make_global(llvm::GlobalVariable* var);

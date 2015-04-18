@@ -24,7 +24,7 @@
 using namespace std;
 using namespace llvm;
 
-#define ENUM_STRING(x) [(size_t)x] = "llvm::" #x
+#define ENUM_STRING(x) [(size_t)x] = #x
 
 namespace
 {
@@ -55,13 +55,18 @@ namespace
 	};
 }
 
-llvm::raw_ostream& global_dumper::on_index(size_t index)
+raw_ostream& global_dumper::nl()
 {
 	ostream.reset(new raw_string_ostream(method.nl()));
-	return *ostream << "globals[" << index << "]";
+	return *ostream;
 }
 
-llvm::raw_ostream& global_dumper::insert(GlobalObject* var)
+raw_ostream& global_dumper::on_index(size_t index)
+{
+	return nl() << "globals[" << index << "]";
+}
+
+raw_ostream& global_dumper::insert(GlobalObject* var)
 {
 	size_t index = var_indices.size();
 	var_indices[var] = index;
@@ -87,11 +92,14 @@ void global_dumper::make_global(GlobalVariable *var)
 		initializer = dump_constant(method, types, prefix, var->getInitializer());
 	}
 	
-	auto& declarationLine = insert(var);
-	declarationLine << "new llvm::GlobalVariable("
+	string varName;
+	(raw_string_ostream(varName) << "cv" << var_indices.size());
+	auto& declarationLine = nl() << "GlobalVariable* " << varName << " = ";
+	declarationLine << "new GlobalVariable("
 		<< "module, " // Module&
 		<< "types[" << typeIndex << "], " // Type*
 		<< var->isConstant() << ", " // bool isConstant
+		<< linkageTypes[var->getLinkage()] << ", " // LinkageType
 		<< initializer << ", "; // Constant* initializer
 	declarationLine << '"';
 	declarationLine.write_escaped(var->getName()); // const Twine& name
@@ -102,17 +110,14 @@ void global_dumper::make_global(GlobalVariable *var)
 		<< var->isExternallyInitialized()
 		<< ");";
 	
-	on_index(varIndex) << "->setLinkage(" << linkageTypes[(size_t)var->getLinkage()] << ");";
-	
-	if (var->isConstant())
-	{
-		on_index(varIndex) << "->setConstant(true);";
-	}
+	nl() << varName << "->setLinkage(" << linkageTypes[(size_t)var->getLinkage()] << ");";
 	
 	if (var->hasUnnamedAddr())
 	{
-		on_index(varIndex) << "->setUnnamedAddr(true);";
+		nl() << varName << "->setUnnamedAddr(true);";
 	}
+	
+	insert(var) << varName << ";";
 	method.nl();
 }
 
@@ -124,7 +129,7 @@ void global_dumper::make_global(Function* fn)
 	
 	size_t typeIndex = types.accumulate(fn->getFunctionType());
 	auto& functionDeclarationLine = insert(fn);
-	functionDeclarationLine << "llvm::Function::Create(cast<FunctionType>(types[" << typeIndex << "]), " << linkageTypes[fn->getLinkage()] << ", \"";
+	functionDeclarationLine << "Function::Create(cast<FunctionType>(types[" << typeIndex << "]), " << linkageTypes[fn->getLinkage()] << ", \"";
 	functionDeclarationLine.write_escaped(fn->getName());
 	functionDeclarationLine << "\", &module);";
 }
@@ -133,7 +138,7 @@ global_dumper::global_dumper(synthesized_class& klass, type_dumper& types)
 : types(types), method(klass.new_method(synthesized_class::am_private, "void", "make_globals")), resizeLine(method.nl())
 {
 	method.nl() = "using namespace llvm;";
-	klass.new_field(synthesized_class::am_private, "std::vector<llvm::GlobalValue*>", "globals");
+	klass.new_field(synthesized_class::am_private, "std::vector<GlobalValue*>", "globals");
 	klass.ctor_nl() = "make_globals();";
 }
 
