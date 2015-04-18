@@ -110,8 +110,6 @@ void global_dumper::make_global(GlobalVariable *var)
 		<< var->isExternallyInitialized()
 		<< ");";
 	
-	nl() << varName << "->setLinkage(" << linkageTypes[(size_t)var->getLinkage()] << ");";
-	
 	if (var->hasUnnamedAddr())
 	{
 		nl() << varName << "->setUnnamedAddr(true);";
