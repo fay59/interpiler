@@ -96,6 +96,7 @@ namespace
 		global_dumper& globals;
 		unordered_map<const BasicBlock*, size_t> blockIndices;
 		unordered_map<const Value*, string> valueNames;
+		vector<PHINode*> phiNodes;
 		
 #if DEBUG
 		unordered_set<string> usedNames;
@@ -221,9 +222,11 @@ namespace
 			for (const BasicBlock& bb : blocks)
 			{
 				size_t blockIndex = blockIndices.size();
-				// Do not emit a variable for block 0. This block can never be referenced anyways.
-				// This allows the IRBuilder to pick up where the last generator function left.
-				if (blockIndex != 0)
+				if (blockIndex == 0)
+				{
+					declare("BasicBlock*", "block", blockIndex) << "builder.GetInsertBlock();";
+				}
+				else
 				{
 					declare("BasicBlock*", "block", blockIndex) << "BasicBlock::Create(context, \"\", function);";
 				}
@@ -258,6 +261,22 @@ namespace
 		{
 			// This assumes just one ret per function. Otherwise it's gonna generate broken code, with a return statement
 			// before the end of the function.
+			
+			// First, populate PHI nodes
+			for (PHINode* phi : phiNodes)
+			{
+				const string& name = name_of(phi);
+				for (unsigned i = 0; i < phi->getNumIncomingValues(); i++)
+				{
+					Value* v = phi->getIncomingValue(i);
+					ensure_exists(phi->getIncomingValue(i), name.substr(name.length() - 3));
+					
+					const string& value = name_of(v);
+					const string& block = name_of(phi->getIncomingBlock(i));
+					nl() << name << "->addIncoming(" << value << ", " << block << ");";
+				}
+				nl();
+			}
 			
 			nl() << "lastBlock = builder.GetInsertBlock();";
 			auto& line = nl();
@@ -504,6 +523,37 @@ namespace
 			size_t targetType = types.accumulate(i.getDestTy());
 			string name = prefix + "var";
 			declare(name) << "builder.CreateCast(" << castOps[i.getOpcode()] << ", " << name_of(casted) << ", types[" << targetType << "]);";
+			set_name(i, name);
+		}
+		
+		void visitPHINode(PHINode& i)
+		{
+			string prefix = make_prefix("phi");
+			size_t type = types.accumulate(i.getType());
+			string name = prefix + "var";
+			declare(name) << "builder.CreatePHI(types[" << type << "], " << i.getNumIncomingValues() << ");";
+			set_name(i, name);
+			
+			// defer setting values to ret time
+			phiNodes.push_back(&i);
+		}
+		
+		void visitExtractValueInst(ExtractValueInst& i)
+		{
+			string prefix = make_prefix("extr");
+			Value* v = i.getAggregateOperand();
+			ensure_exists(v, prefix);
+			
+			auto& arrayLine = declare("ArrayRef<unsigned>", prefix, "array", false);
+			arrayLine << "{ ";
+			for (auto iter = i.idx_begin(); iter != i.idx_end(); iter++)
+			{
+				arrayLine << *iter << ", ";
+			}
+			arrayLine << "};";
+			
+			string name = prefix + "var";
+			declare(name) << "builder.CreateExtractValue(" << name << ", " << prefix << "array);";
 			set_name(i, name);
 		}
 		

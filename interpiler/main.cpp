@@ -66,14 +66,21 @@ namespace
 		return file.substr(0, endIndex);
 	}
 	
+	template<size_t N>
+	void include(raw_ostream& ostream, const char (&quotes)[N], const string& file)
+	{
+		static_assert(N >= 2, "Need at least two characters in quotes array");
+		ostream << "#include " << quotes[0] << file << quotes[1] << '\n';
+	}
+
 	void include_u(raw_ostream& ostream, const string& file)
 	{
-		ostream << "#include \"" << file << "\"\n";
+		include(ostream, "\"\"", file);
 	}
 	
 	void include_s(raw_ostream& ostream, const string& file)
 	{
-		ostream << "#include <" << file << ">\n";
+		include(ostream, "<>", file);
 	}
 }
 
@@ -144,7 +151,7 @@ int main(int argc, const char * argv[])
 	}
 	else
 	{
-		cerr << file_name(argv[0]) << ": couldn't read input module: " << error.getMessage().str() << endl;
+		cerr << file_name(argv[0]) << ": " << error.getMessage().str() << endl;
 		return 1;
 	}
 }
