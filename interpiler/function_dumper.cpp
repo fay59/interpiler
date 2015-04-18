@@ -608,11 +608,14 @@ void function_dumper::accumulate(Function *function)
 	synthesized_method& method = klass.new_method(synthesized_class::am_public, returnTypeAsString, function->getName().str());
 	
 	const auto& argList = function->getArgumentList();
-	for (size_t i = 0; i < argList.size(); i++)
+	size_t i = 0;
+	for (auto iter = argList.begin(); iter != argList.end(); iter++)
 	{
+		types.accumulate(iter->getType());
 		auto& param = method.new_param();
 		param.type = "llvm::Value*";
 		raw_string_ostream(param.name) << "arg" << i;
+		i++;
 	}
 	
 	known_functions.insert(function);
