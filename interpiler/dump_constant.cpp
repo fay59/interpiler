@@ -202,7 +202,7 @@ namespace
 		ss << "Constant* " << prefix << "int = ConstantInt::get(types[" << index << "], ";
 		APInt value = constant->getValue();
 		value.print(ss, false);
-		ss << ");";
+		ss << "u);";
 		
 		return prefix + "int";
 	}
