@@ -138,7 +138,7 @@ global_dumper::global_dumper(synthesized_class& klass, type_dumper& types)
 : types(types), method(klass.new_method(synthesized_class::am_private, "void", "make_globals")), resizeLine(method.nl())
 {
 	method.nl() = "using namespace llvm;";
-	klass.new_field(synthesized_class::am_private, "std::vector<GlobalValue*>", "globals");
+	klass.new_field(synthesized_class::am_private, "std::vector<llvm::GlobalValue*>", "globals");
 	klass.ctor_nl() = "make_globals();";
 }
 
