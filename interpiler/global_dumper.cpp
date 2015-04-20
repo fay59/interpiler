@@ -79,7 +79,6 @@ raw_ostream& global_dumper::insert(GlobalObject* var)
 void global_dumper::make_global(GlobalVariable *var)
 {
 	assert((size_t)var->getThreadLocalMode() < countof(threadLocalModes));
-	assert((size_t)var->getLinkage() < countof(linkageTypes));
 	
 	size_t typeIndex = types.accumulate(var->getType()->getPointerElementType());
 	size_t varIndex = var_indices.size();
@@ -99,7 +98,7 @@ void global_dumper::make_global(GlobalVariable *var)
 		<< "module, " // Module&
 		<< "types[" << typeIndex << "], " // Type*
 		<< var->isConstant() << ", " // bool isConstant
-		<< linkageTypes[var->getLinkage()] << ", " // LinkageType
+		<< "GlobalValue::PrivateLinkage, " // LinkageType
 		<< initializer << ", "; // Constant* initializer
 	declarationLine << '"';
 	declarationLine.write_escaped(var->getName()); // const Twine& name
@@ -122,7 +121,6 @@ void global_dumper::make_global(GlobalVariable *var)
 void global_dumper::make_global(Function* fn)
 {
 	assert((size_t)fn->getThreadLocalMode() < countof(threadLocalModes));
-	assert((size_t)fn->getLinkage() < countof(linkageTypes));
 	assert(fn->isDeclaration());
 	
 	size_t typeIndex = types.accumulate(fn->getFunctionType());
