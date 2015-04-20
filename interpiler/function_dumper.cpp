@@ -243,6 +243,26 @@ namespace
 			}
 		}
 		
+		void flushPhiNodes()
+		{
+			// Populate PHI nodes
+			for (PHINode* phi : phiNodes)
+			{
+				const string& name = name_of(phi);
+				for (unsigned i = 0; i < phi->getNumIncomingValues(); i++)
+				{
+					Value* v = phi->getIncomingValue(i);
+					ensure_exists(phi->getIncomingValue(i), name.substr(name.length() - 3));
+					
+					const string& value = name_of(v);
+					const string& block = name_of(phi->getIncomingBlock(i));
+					nl() << name << "->addIncoming(" << value << ", " << block << ");";
+				}
+				nl();
+			}
+			phiNodes.clear();
+		}
+		
 		void visitBasicBlock(BasicBlock& bb)
 		{
 			// Assume that the first basic block is the one that the previous function left at.
@@ -262,23 +282,9 @@ namespace
 			// This assumes just one ret per function. Otherwise it's gonna generate broken code, with a return statement
 			// before the end of the function.
 			
-			// First, populate PHI nodes
-			for (PHINode* phi : phiNodes)
-			{
-				const string& name = name_of(phi);
-				for (unsigned i = 0; i < phi->getNumIncomingValues(); i++)
-				{
-					Value* v = phi->getIncomingValue(i);
-					ensure_exists(phi->getIncomingValue(i), name.substr(name.length() - 3));
-					
-					const string& value = name_of(v);
-					const string& block = name_of(phi->getIncomingBlock(i));
-					nl() << name << "->addIncoming(" << value << ", " << block << ");";
-				}
-				nl();
-			}
+			// Flush phi nodes now because we can't generate anything after a return statement.
+			flushPhiNodes();
 			
-			nl() << "lastBlock = builder.GetInsertBlock();";
 			auto& line = nl();
 			line << "return";
 			if (Value* v = i.getReturnValue())
@@ -587,6 +593,7 @@ void function_dumper::make_function(Function *function, synthesized_method &meth
 	method.nl() = "using namespace llvm;";
 	to_method_visitor visitor(method, types, globals, function->getArgumentList(), function->getBasicBlockList());
 	visitor.visit(function->begin(), function->end());
+	visitor.flushPhiNodes();
 }
 
 function_dumper::function_dumper(LLVMContext& ctx, synthesized_class& klass, type_dumper& types, global_dumper& globals)
