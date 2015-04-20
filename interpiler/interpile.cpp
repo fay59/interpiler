@@ -42,7 +42,6 @@ synthesized_class interpile(LLVMContext& context, unique_ptr<Module> module, con
 	outputClass.new_field(synthesized_class::am_private, "llvm::LLVMContext&", "context", "context");
 	outputClass.new_field(synthesized_class::am_private, "llvm::Module&", "module", "module");
 	outputClass.new_field(synthesized_class::am_public, "llvm::Function*", "function", "nullptr");
-	outputClass.new_field(synthesized_class::am_public, "llvm::BasicBlock*", "lastBlock", "nullptr");
 	
 	auto& startFuncMethod = outputClass.new_method(synthesized_class::am_public, "void", "start_function");
 	startFuncMethod.new_param("llvm::FunctionType&", "type");
@@ -50,23 +49,30 @@ synthesized_class interpile(LLVMContext& context, unique_ptr<Module> module, con
 	startFuncMethod.nl() = "assert(function == nullptr && \"unterminated function\");";
 	startFuncMethod.nl() = "assert(type.getReturnType()->isVoidTy() && \"created functions must return void\");";
 	startFuncMethod.nl() = "function = llvm::Function::Create(&type, llvm::GlobalValue::ExternalLinkage, name, &module);";
+	startFuncMethod.nl() = "builder.ClearInsertionPoint();";
 	startFuncMethod.nl() = "start_block();";
 	
 	auto& endFuncMethod = outputClass.new_method(synthesized_class::am_public, "llvm::Function*", "end_function");
-	endFuncMethod.nl() = "builder.CreateRetVoid();";
+	endFuncMethod.nl() = "if (llvm::BasicBlock* block = builder.GetInsertBlock())";
+	endFuncMethod.nl() = "{";
+	endFuncMethod.nl() = "\tif (builder.GetInsertBlock()->getTerminator() == nullptr)";
+	endFuncMethod.nl() = "\t{";
+	endFuncMethod.nl() = "\t\tbuilder.CreateRetVoid();";
+	endFuncMethod.nl() = "\t}";
+	endFuncMethod.nl() = "}";
 	endFuncMethod.nl() = "auto fn = function;";
 	endFuncMethod.nl() = "function = nullptr;";
 	endFuncMethod.nl() = "return fn;";
 	
 	auto& startBlockMethod = outputClass.new_method(synthesized_class::am_public, "llvm::BasicBlock*", "start_block");
 	startBlockMethod.new_param("const std::string&", "name", "\"\"");
-	startBlockMethod.nl() = "lastBlock = llvm::BasicBlock::Create(context, name, function);";
+	startBlockMethod.nl() = "llvm::BasicBlock* newBlock = llvm::BasicBlock::Create(context, name, function);";
 	startBlockMethod.nl() = "if (builder.GetInsertBlock() != nullptr)";
 	startBlockMethod.nl() = "{";
-	startBlockMethod.nl() = "\tbuilder.CreateBr(lastBlock);";
+	startBlockMethod.nl() = "\tbuilder.CreateBr(newBlock);";
 	startBlockMethod.nl() = "}";
-	startBlockMethod.nl() = "builder.SetInsertPoint(lastBlock);";
-	startBlockMethod.nl() = "return lastBlock;";
+	startBlockMethod.nl() = "builder.SetInsertPoint(newBlock);";
+	startBlockMethod.nl() = "return newBlock;";
 	
 	type_dumper types(outputClass);
 	global_dumper globals(outputClass, types);
