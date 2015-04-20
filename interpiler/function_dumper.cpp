@@ -81,8 +81,6 @@ namespace
 		make_pair(&CallInst::isNoInline, "setNoInline"),
 		make_pair(&CallInst::isTailCall, "setTailCall"),
 		make_pair(&CallInst::canReturnTwice, "setCanReturnTwice"),
-		make_pair(&CallInst::doesNotAccessMemory, "setDoesNotAccessMemory"),
-		make_pair(&CallInst::onlyReadsMemory, "setOnlyReadsMemory"),
 		make_pair(&CallInst::doesNotReturn, "setDoesNotReturn"),
 		make_pair(&CallInst::doesNotThrow, "setDoesNotThrow"),
 		make_pair(&CallInst::cannotDuplicate, "setCannotDuplicate"),
@@ -458,6 +456,16 @@ namespace
 				{
 					nl() << varName << "->" << pair.second << "();";
 				}
+			}
+			
+			// these two overlap in a nasty way, treat them separately
+			if (i.doesNotAccessMemory())
+			{
+				nl() << varName << "->setDoesNotAccessMemory();";
+			}
+			else if (i.onlyReadsMemory())
+			{
+				nl() << varName << "->setOnlyReadsMemory();";
 			}
 			
 			set_name(i, varName);
