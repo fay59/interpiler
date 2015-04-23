@@ -571,6 +571,21 @@ namespace
 			set_name(i, name);
 		}
 		
+		void visitSelectInst(SelectInst& i)
+		{
+			string prefix = make_prefix("select");
+			Value* cond = i.getCondition();
+			Value* ifTrue = i.getTrueValue();
+			Value* ifFalse = i.getFalseValue();
+			ensure_exists(cond, prefix);
+			ensure_exists(ifTrue, prefix);
+			ensure_exists(ifFalse, prefix);
+			
+			string name = prefix = "var";
+			declare(name) << "builder.CreateSelect(" << name_of(cond) << ", " << name_of(ifTrue) << ", " << name_of(ifFalse) << ");";
+			set_name(i, name);
+		}
+		
 		// not implemented
 		void visitInstruction(Instruction& i)
 		{
