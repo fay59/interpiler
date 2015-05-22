@@ -419,36 +419,14 @@ namespace
 			}
 			
 			string varName = prefix + "var";
-			unsigned numArgs = i.getNumArgOperands();
-			if (numArgs <= 5)
+			auto& callLine = declare("CallInst*", varName);
+			callLine << "builder.CreateCall(" << name_of(called) << ", {";
+			for (Use& use : i.arg_operands())
 			{
-				auto& callLine = declare("CallInst*", varName);
-				callLine << "builder.CreateCall";
-				if (numArgs > 1)
-				{
-					callLine << numArgs;
-				}
-				callLine << "(" << name_of(called);
-				for (Use& use : i.arg_operands())
-				{
-					Value* arg = use.get();
-					callLine << ", " << name_of(arg);
-				}
-				callLine << ");";
+				Value* arg = use.get();
+				callLine << name_of(arg) << ", ";
 			}
-			else
-			{
-				auto& arrayLine = nl();
-				arrayLine << "Array<Value*> " << prefix << "array { ";
-				for (Use& use : i.arg_operands())
-				{
-					Value* arg = use.get();
-					arrayLine << name_of(arg) << ", ";
-				}
-				arrayLine << "};";
-				
-				declare("CallInst", varName) << "builder.CreateCall(" << name_of(called) << ", " << prefix << "array);";
-			}
+			callLine << "});";
 			
 			for (const auto& pair : callInstAttributes)
 			{
