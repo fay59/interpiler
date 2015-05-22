@@ -302,14 +302,6 @@ namespace
 				ensure_exists(iter->get(), prefix);
 			}
 			
-			auto& arrayLine = declare("ArrayRef<Value*>", prefix, "array", false);
-			arrayLine << "{ ";
-			for (auto iter = i.idx_begin(); iter != i.idx_end(); iter++)
-			{
-				arrayLine << name_of(iter->get()) << ", ";
-			}
-			arrayLine << "};";
-			
 			string name = prefix + "var";
 			auto& gepLine = declare(name);
 			gepLine << "builder.Create";
@@ -317,7 +309,12 @@ namespace
 			{
 				gepLine << "InBounds";
 			}
-			gepLine << "GEP(" << valueNames[pointerOperand] << ", " << prefix << "array);";
+			gepLine << "GEP(" << valueNames[pointerOperand] << ", {";
+			for (auto iter = i.idx_begin(); iter != i.idx_end(); iter++)
+			{
+				gepLine << name_of(iter->get()) << ", ";
+			}
+			gepLine << "});";
 			set_name(i, name);
 		}
 		
@@ -536,16 +533,14 @@ namespace
 			Value* v = i.getAggregateOperand();
 			ensure_exists(v, prefix);
 			
-			auto& arrayLine = declare("ArrayRef<unsigned>", prefix, "array", false);
-			arrayLine << "{ ";
+			string name = prefix + "var";
+			auto& extractLine = declare(name);
+			extractLine << "builder.CreateExtractValue(" << name_of(v) << ", {";
 			for (auto iter = i.idx_begin(); iter != i.idx_end(); iter++)
 			{
-				arrayLine << *iter << ", ";
+				extractLine << *iter << ", ";
 			}
-			arrayLine << "};";
-			
-			string name = prefix + "var";
-			declare(name) << "builder.CreateExtractValue(" << name_of(v) << ", " << prefix << "array);";
+			extractLine << "});";
 			set_name(i, name);
 		}
 		

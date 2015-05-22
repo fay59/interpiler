@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC51799F1B0EE521001DC072 /* libLLVMAsmParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC51799A1B0EE521001DC072 /* libLLVMAsmParser.a */; };
+		DC5179A11B0EE521001DC072 /* libLLVMCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC51799C1B0EE521001DC072 /* libLLVMCore.a */; };
+		DC5179A21B0EE521001DC072 /* libLLVMIRReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC51799D1B0EE521001DC072 /* libLLVMIRReader.a */; };
+		DC5179A31B0EE521001DC072 /* libLLVMSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC51799E1B0EE521001DC072 /* libLLVMSupport.a */; };
+		DC5179A51B0EE647001DC072 /* libLLVMBitReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5179A41B0EE647001DC072 /* libLLVMBitReader.a */; };
 		DC66D2511ADF363C00CDAD90 /* synthesized_class.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC66D24F1ADF363C00CDAD90 /* synthesized_class.cpp */; };
 		DC66D2541ADF369A00CDAD90 /* synthesized_method.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC66D2521ADF369A00CDAD90 /* synthesized_method.cpp */; };
 		DC906B0B1AD99F7C0000C846 /* type_dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC906B091AD99F7C0000C846 /* type_dumper.cpp */; };
 		DC906B111ADA055A0000C846 /* global_dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC906B0F1ADA055A0000C846 /* global_dumper.cpp */; };
 		DC906B151ADA08D10000C846 /* dump_constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC906B131ADA08D10000C846 /* dump_constant.cpp */; };
 		DCAFCA261AD6CE000095E89E /* interpile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCAFCA251AD6CE000095E89E /* interpile.cpp */; };
-		DCAFCA441AD805F40095E89E /* libLLVMCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA421AD805F40095E89E /* libLLVMCore.a */; };
-		DCAFCA451AD805F40095E89E /* libLLVMSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA431AD805F40095E89E /* libLLVMSupport.a */; };
-		DCAFCA481AD806800095E89E /* libLLVMIRReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA471AD806800095E89E /* libLLVMIRReader.a */; };
-		DCAFCA4A1AD806970095E89E /* libLLVMAsmParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA491AD806970095E89E /* libLLVMAsmParser.a */; };
-		DCAFCA4C1AD806A20095E89E /* libLLVMBitReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA4B1AD806A20095E89E /* libLLVMBitReader.a */; };
 		DCAFCA4E1AD8073C0095E89E /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAFCA4D1AD8073C0095E89E /* libncurses.dylib */; };
 		DCBC98E11AD5C5B3001F702C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCBC98E01AD5C5B3001F702C /* main.cpp */; };
 		DCD355FF1ADC8D4F00B41A94 /* function_dumper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD355FD1ADC8D4F00B41A94 /* function_dumper.cpp */; };
@@ -36,6 +36,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DC51799A1B0EE521001DC072 /* libLLVMAsmParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAsmParser.a; path = "../llvm-config-build/Debug+Asserts/lib/libLLVMAsmParser.a"; sourceTree = "<group>"; };
+		DC51799C1B0EE521001DC072 /* libLLVMCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMCore.a; path = "../llvm-config-build/Debug+Asserts/lib/libLLVMCore.a"; sourceTree = "<group>"; };
+		DC51799D1B0EE521001DC072 /* libLLVMIRReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMIRReader.a; path = "../llvm-config-build/Debug+Asserts/lib/libLLVMIRReader.a"; sourceTree = "<group>"; };
+		DC51799E1B0EE521001DC072 /* libLLVMSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSupport.a; path = "../llvm-config-build/Debug+Asserts/lib/libLLVMSupport.a"; sourceTree = "<group>"; };
+		DC5179A41B0EE647001DC072 /* libLLVMBitReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBitReader.a; path = "../llvm-config-build/Debug+Asserts/lib/libLLVMBitReader.a"; sourceTree = "<group>"; };
 		DC66D24F1ADF363C00CDAD90 /* synthesized_class.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = synthesized_class.cpp; sourceTree = "<group>"; };
 		DC66D2501ADF363C00CDAD90 /* synthesized_class.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = synthesized_class.h; sourceTree = "<group>"; };
 		DC66D2521ADF369A00CDAD90 /* synthesized_method.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = synthesized_method.cpp; sourceTree = "<group>"; };
@@ -47,11 +52,6 @@
 		DC906B131ADA08D10000C846 /* dump_constant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dump_constant.cpp; sourceTree = "<group>"; };
 		DC906B141ADA08D10000C846 /* dump_constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dump_constant.h; sourceTree = "<group>"; };
 		DCAFCA251AD6CE000095E89E /* interpile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interpile.cpp; sourceTree = "<group>"; };
-		DCAFCA421AD805F40095E89E /* libLLVMCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMCore.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMCore.a"; sourceTree = "<group>"; };
-		DCAFCA431AD805F40095E89E /* libLLVMSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMSupport.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMSupport.a"; sourceTree = "<group>"; };
-		DCAFCA471AD806800095E89E /* libLLVMIRReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMIRReader.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMIRReader.a"; sourceTree = "<group>"; };
-		DCAFCA491AD806970095E89E /* libLLVMAsmParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMAsmParser.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMAsmParser.a"; sourceTree = "<group>"; };
-		DCAFCA4B1AD806A20095E89E /* libLLVMBitReader.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLLVMBitReader.a; path = "../../../Projets/OpenSource/lldb/llvm/Release+Asserts/lib/libLLVMBitReader.a"; sourceTree = "<group>"; };
 		DCAFCA4D1AD8073C0095E89E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = usr/lib/libncurses.dylib; sourceTree = SDKROOT; };
 		DCBC98DD1AD5C5B3001F702C /* interpiler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = interpiler; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCBC98E01AD5C5B3001F702C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -65,11 +65,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCAFCA4E1AD8073C0095E89E /* libncurses.dylib in Frameworks */,
-				DCAFCA441AD805F40095E89E /* libLLVMCore.a in Frameworks */,
-				DCAFCA481AD806800095E89E /* libLLVMIRReader.a in Frameworks */,
-				DCAFCA4A1AD806970095E89E /* libLLVMAsmParser.a in Frameworks */,
-				DCAFCA4C1AD806A20095E89E /* libLLVMBitReader.a in Frameworks */,
-				DCAFCA451AD805F40095E89E /* libLLVMSupport.a in Frameworks */,
+				DC51799F1B0EE521001DC072 /* libLLVMAsmParser.a in Frameworks */,
+				DC5179A51B0EE647001DC072 /* libLLVMBitReader.a in Frameworks */,
+				DC5179A11B0EE521001DC072 /* libLLVMCore.a in Frameworks */,
+				DC5179A21B0EE521001DC072 /* libLLVMIRReader.a in Frameworks */,
+				DC5179A31B0EE521001DC072 /* libLLVMSupport.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,11 +79,12 @@
 		DCAFCA461AD805FB0095E89E /* LLVM Libs */ = {
 			isa = PBXGroup;
 			children = (
-				DCAFCA471AD806800095E89E /* libLLVMIRReader.a */,
-				DCAFCA421AD805F40095E89E /* libLLVMCore.a */,
-				DCAFCA431AD805F40095E89E /* libLLVMSupport.a */,
-				DCAFCA4B1AD806A20095E89E /* libLLVMBitReader.a */,
-				DCAFCA491AD806970095E89E /* libLLVMAsmParser.a */,
+				DC5179A41B0EE647001DC072 /* libLLVMBitReader.a */,
+				DC51799A1B0EE521001DC072 /* libLLVMAsmParser.a */,
+				DC51799C1B0EE521001DC072 /* libLLVMCore.a */,
+				DC51799D1B0EE521001DC072 /* libLLVMIRReader.a */,
+				DC51799E1B0EE521001DC072 /* libLLVMSupport.a */,
+				DCAFCA4D1AD8073C0095E89E /* libncurses.dylib */,
 			);
 			name = "LLVM Libs";
 			sourceTree = "<group>";
@@ -91,7 +92,6 @@
 		DCBC98D41AD5C5B3001F702C = {
 			isa = PBXGroup;
 			children = (
-				DCAFCA4D1AD8073C0095E89E /* libncurses.dylib */,
 				DCAFCA461AD805FB0095E89E /* LLVM Libs */,
 				DCBC98DF1AD5C5B3001F702C /* interpiler */,
 				DCBC98DE1AD5C5B3001F702C /* Products */,
@@ -288,11 +288,12 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
-					/Users/felix/Projets/OpenSource/lldb/llvm/include,
+					"/Users/felix/Projets/OpenSource/llvm-gvn-rewrite/include",
+					"/Users/felix/Projets/OpenSource/llvm-config-build/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/felix/Projets/OpenSource/lldb/llvm/Release+Asserts/lib",
+					"/Users/felix/Projets/OpenSource/llvm-config-build/Debug+Asserts/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -310,11 +311,12 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
-					/Users/felix/Projets/OpenSource/lldb/llvm/include,
+					"/Users/felix/Projets/OpenSource/llvm-gvn-rewrite/include",
+					"/Users/felix/Projets/OpenSource/llvm-config-build/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/felix/Projets/OpenSource/lldb/llvm/Release+Asserts/lib",
+					"/Users/felix/Projets/OpenSource/llvm-config-build/Debug+Asserts/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
