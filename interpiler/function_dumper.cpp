@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include <deque>
+#include <llvm/Support/CommandLine.h>
 #include <llvm/IR/InstVisitor.h>
 #include <llvm/IR/Operator.h>
 #include <stdexcept>
@@ -32,6 +33,11 @@
 
 using namespace llvm;
 using namespace std;
+
+namespace
+{
+	cl::opt<bool> generate_metadata("m", cl::desc("Generator produces metadata"));
+}
 
 #define ENUM_STRING(x) [(size_t)x] = #x
 
@@ -340,19 +346,22 @@ namespace
 		
 		void makeMetadata(Instruction& i)
 		{
-			SmallVector<pair<unsigned, MDNode*>, 4> metadata;
-			i.getAllMetadata(metadata);
-			
-			deque<string> lines;
-			for (auto& pair : metadata)
+			if (generate_metadata)
 			{
-				if (dumpMetadata(pair.second, lines))
+				SmallVector<pair<unsigned, MDNode*>, 4> metadata;
+				i.getAllMetadata(metadata);
+				
+				deque<string> lines;
+				for (auto& pair : metadata)
 				{
-					method.append(lines.begin(), lines.end());
-					const string& name = mdNames[pair.second];
-					nl() << name_of(&i) << "->setMetadata(" << pair.first << ", " << name << ");";
+					if (dumpMetadata(pair.second, lines))
+					{
+						method.append(lines.begin(), lines.end());
+						const string& name = mdNames[pair.second];
+						nl() << name_of(&i) << "->setMetadata(" << pair.first << ", " << name << ");";
+					}
+					lines.clear();
 				}
-				lines.clear();
 			}
 		}
 		
