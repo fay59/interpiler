@@ -73,6 +73,12 @@ public:
 		return new_of(code);
 	}
 	
+	template<typename TIter>
+	inline void append(TIter begin, TIter end)
+	{
+		code.insert(code.end(), begin, end);
+	}
+	
 	void print_declaration(llvm::raw_ostream& os) const;
 	void print_definition(llvm::raw_ostream& os, const std::string& ns_prefix = "") const;
 };

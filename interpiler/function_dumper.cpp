@@ -21,6 +21,7 @@
 #include <dlfcn.h>
 #include <iostream>
 
+#include <deque>
 #include <llvm/IR/InstVisitor.h>
 #include <llvm/IR/Operator.h>
 #include <stdexcept>
@@ -92,8 +93,10 @@ namespace
 		synthesized_method& method;
 		type_dumper& types;
 		global_dumper& globals;
+		size_t mdCount;
 		unordered_map<const BasicBlock*, size_t> blockIndices;
 		unordered_map<const Value*, string> valueNames;
+		unordered_map<const Metadata*, string> mdNames;
 		vector<PHINode*> phiNodes;
 		
 #if DEBUG
@@ -166,7 +169,6 @@ namespace
 		
 		void ensure_exists(Value* v, const string& prefix)
 		{
-			Constant* c = dyn_cast<Constant>(v);
 			auto nameIter = valueNames.find(v);
 			if (nameIter == valueNames.end())
 			{
@@ -198,7 +200,7 @@ namespace
 					valueNames.erase(i);
 					delete i;
 				}
-				else if (c != nullptr)
+				else if (Constant* c = dyn_cast<Constant>(v))
 				{
 					string argNumPrefix = prefix;
 					raw_string_ostream(argNumPrefix) << "val" << valueNames.size() << "_";
@@ -215,7 +217,7 @@ namespace
 		
 	public:
 		to_method_visitor(synthesized_method& method, type_dumper& types, global_dumper& globals, const iplist<Argument>& arguments, const iplist<BasicBlock>& blocks)
-		: method(method), types(types), globals(globals)
+		: method(method), types(types), globals(globals), mdCount(0)
 		{
 			for (const BasicBlock& bb : blocks)
 			{
@@ -259,6 +261,99 @@ namespace
 				nl();
 			}
 			phiNodes.clear();
+		}
+		
+		bool dumpMetadata(Metadata* mdItem, deque<string>& lines)
+		{
+			auto nameIter = mdNames.find(mdItem);
+			if (nameIter != mdNames.end())
+			{
+				return true;
+			}
+			
+			mdCount++;
+			string& mdName = mdNames[mdItem];
+			raw_string_ostream(mdName) << "md" << mdCount;
+			
+			if (auto node = dyn_cast<MDTuple>(mdItem))
+			{
+				string result;
+				unsigned selfIndex = ~0;
+				{
+					// scoping ostream to allow move
+					raw_string_ostream ss(result);
+					
+					ss << "MDTuple* " << mdName << " = MDTuple::get(context, {";
+					unsigned i = 0;
+					for (const MDOperand& op : node->operands())
+					{
+						Metadata* item = op.get();
+						if (item == mdItem)
+						{
+							ss << "nullptr, ";
+							assert(selfIndex == ~0 && "more than one self-index needed");
+							selfIndex = i;
+						}
+						else if (dumpMetadata(op.get(), lines))
+						{
+							ss << mdNames[op.get()] << ", ";
+						}
+						else
+						{
+							return false;
+						}
+						i++;
+					}
+					ss << "});";
+				}
+				
+				lines.push_back(move(result));
+				if (selfIndex != ~0)
+				{
+					lines.emplace_back();
+					raw_string_ostream ss(lines.back());
+					ss << mdName << "->replaceOperandWith(" << selfIndex << ", " << mdName << ");";
+				}
+				
+				return true;
+			}
+			
+			lines.emplace_back();
+			raw_string_ostream ss(lines.back());
+			
+			if (auto string = dyn_cast<MDString>(mdItem))
+			{
+				ss << "MDString* " << mdName << " = MDString::get(context, \"";
+				ss.write_escaped(string->getString());
+				ss << "\");";
+				return true;
+			}
+			else if (auto constant = dyn_cast<ConstantAsMetadata>(mdItem))
+			{
+				Constant* c = constant->getValue();
+				ensure_exists(c, mdName);
+				ss << "ConstantAsMetadata* " << mdName << " = ConstantAsMetadata::get(" << name_of(c) << ");";
+				return true;
+			}
+			return false;
+		}
+		
+		void makeMetadata(Instruction& i)
+		{
+			SmallVector<pair<unsigned, MDNode*>, 4> metadata;
+			i.getAllMetadata(metadata);
+			
+			deque<string> lines;
+			for (auto& pair : metadata)
+			{
+				if (dumpMetadata(pair.second, lines))
+				{
+					method.append(lines.begin(), lines.end());
+					const string& name = mdNames[pair.second];
+					nl() << name_of(&i) << "->setMetadata(" << pair.first << ", " << name << ");";
+				}
+				lines.clear();
+			}
 		}
 		
 		void visitBasicBlock(BasicBlock& bb)
@@ -316,6 +411,7 @@ namespace
 			}
 			gepLine << "});";
 			set_name(i, name);
+			makeMetadata(i);
 		}
 		
 		void visitLoadInst(LoadInst& i)
@@ -329,6 +425,7 @@ namespace
 			declare("llvm::LoadInst*", varName) << "builder.CreateLoad(" << name_of(pointer) << ", " << i.isVolatile() << ");";
 			nl() << varName << "->setAlignment(" << i.getAlignment() << ");";
 			set_name(i, varName);
+			makeMetadata(i);
 		}
 		
 		void visitStoreInst(StoreInst& i)
@@ -344,6 +441,7 @@ namespace
 			declare("llvm::StoreInst*", varName) << "builder.CreateStore(" << name_of(value) << ", " << name_of(pointer) << ", " << i.isVolatile() << ");";
 			nl() << varName << "->setAlignment(" << i.getAlignment() << ");";
 			set_name(i, varName);
+			makeMetadata(i);
 		}
 		
 		void visitCmpInst(CmpInst& i)
@@ -374,6 +472,7 @@ namespace
 			CmpInst::Predicate pred = i.getPredicate();
 			cmpLine << "Cmp(" << predicates[pred] << ", " << name_of(left) << ", " << name_of(right) << ");";
 			set_name(i, varName);
+			makeMetadata(i);
 		}
 		
 		void visitBranchInst(BranchInst& i)
@@ -444,6 +543,7 @@ namespace
 			}
 			
 			set_name(i, varName);
+			makeMetadata(i);
 		}
 		
 		void visitUnreachableInst(UnreachableInst&)
@@ -501,6 +601,7 @@ namespace
 			binopLine << "(" << binaryOps[opcode] << ", " << name_of(left) << ", " << name_of(right) << ", \"\", ";
 			binopLine << "builder.GetInsertBlock());";
 			set_name(i, varName);
+			makeMetadata(i);
 		}
 		
 		void visitCastInst(CastInst& i)
@@ -513,6 +614,7 @@ namespace
 			string name = prefix + "var";
 			declare(name) << "builder.CreateCast(" << castOps[i.getOpcode()] << ", " << name_of(casted) << ", types[" << targetType << "]);";
 			set_name(i, name);
+			makeMetadata(i);
 		}
 		
 		void visitPHINode(PHINode& i)
@@ -542,6 +644,7 @@ namespace
 			}
 			extractLine << "});";
 			set_name(i, name);
+			makeMetadata(i);
 		}
 		
 		void visitSelectInst(SelectInst& i)
@@ -557,6 +660,7 @@ namespace
 			string name = prefix = "var";
 			declare(name) << "builder.CreateSelect(" << name_of(cond) << ", " << name_of(ifTrue) << ", " << name_of(ifFalse) << ");";
 			set_name(i, name);
+			makeMetadata(i);
 		}
 		
 		// not implemented
