@@ -57,7 +57,7 @@ namespace
 
 raw_ostream& global_dumper::nl()
 {
-	ostream.reset(new raw_string_ostream(method.nl()));
+	ostream.reset(new raw_string_ostream(makeGlobals.nl()));
 	return *ostream;
 }
 
@@ -88,7 +88,7 @@ void global_dumper::make_global(GlobalVariable *var)
 	{
 		string prefix;
 		raw_string_ostream(prefix) << "var" << varIndex << '_';
-		initializer = dump_constant(method, types, prefix, var->getInitializer());
+		initializer = dump_constant(makeGlobals, types, prefix, var->getInitializer());
 	}
 	
 	string varName;
@@ -115,7 +115,7 @@ void global_dumper::make_global(GlobalVariable *var)
 	}
 	
 	insert(var) << varName << ";";
-	method.nl();
+	makeGlobals.nl();
 }
 
 void global_dumper::make_global(Function* fn)
@@ -128,14 +128,23 @@ void global_dumper::make_global(Function* fn)
 	functionDeclarationLine << "Function::Create(cast<FunctionType>(types[" << typeIndex << "]), " << linkageTypes[fn->getLinkage()] << ", \"";
 	functionDeclarationLine.write_escaped(fn->getName());
 	functionDeclarationLine << "\", &module);";
+	(nl() << "functions[\"").write_escaped(fn->getName()) << "\"] = (Function*)globals[" << (var_indices.size() - 1) << "];";
 }
 
 global_dumper::global_dumper(synthesized_class& klass, type_dumper& types)
-: types(types), method(klass.new_method(synthesized_class::am_private, "void", "make_globals")), resizeLine(method.nl())
+: types(types)
+, makeGlobals(klass.new_method(synthesized_class::am_private, "void", "make_globals"))
+, resizeLine(makeGlobals.nl())
 {
-	method.nl() = "using namespace llvm;";
+	makeGlobals.nl() = "using namespace llvm;";
 	klass.new_field(synthesized_class::am_private, "std::vector<llvm::GlobalValue*>", "globals");
+	klass.new_field(synthesized_class::am_private, "std::unordered_map<std::string, llvm::Function*>", "functions");
 	klass.ctor_nl() = "make_globals();";
+	
+	synthesized_method& getFunction = klass.new_method(synthesized_class::am_private, "llvm::Function*", "get_function");
+	getFunction.new_param("const std::string&", "name");
+	getFunction.nl() = "auto iter = functions.find(name);";
+	getFunction.nl() = "return iter == functions.end() ? nullptr : iter->second;";
 }
 
 size_t global_dumper::accumulate(GlobalVariable *variable)

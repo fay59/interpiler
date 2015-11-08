@@ -32,7 +32,7 @@
 class global_dumper
 {
 	type_dumper& types;
-	synthesized_method& method;
+	synthesized_method& makeGlobals;
 	std::string& resizeLine;
 	std::unordered_map<llvm::GlobalObject*, size_t> var_indices;
 	
